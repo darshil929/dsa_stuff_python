@@ -8,7 +8,7 @@
 class HashTable:
     def __init__(self):
         self.MAX = 100
-        self.arr = [None for i in range(self.MAX)]
+        self.arr = [[] for i in range(self.MAX)]
 
     def get_hash(self, key):
         h = 0
@@ -18,20 +18,32 @@ class HashTable:
     
     def __setitem__(self, key, val):
         h = self.get_hash(key)
-        self.arr[h] = val
+        found = False
+        for idx, element in enumerate(self.arr[h]):
+            if len(element) == 2 and element[0] == key:
+                self.arr[h][idx] = (key,val)
+                found = True
+                break
+        if not found:
+            self.arr[h].append((key, val))
 
     def __getitem__(self, key):
         h = self.get_hash(key)
-        return self.arr[h]
+        for element in self.arr[h]:
+            if element[0] == key:
+                return element[1]
     
     def __delitem__(self, key):
         h = self.get_hash(key)
-        self.arr[h] = None
+        for index, element in enumerate(self.arr[h]):
+            if element[0] == key:
+                del self.arr[h][index] 
     
 t = HashTable()
-t['march 15'] = 50
+t['march 6'] = 50
 t['october 2'] = 92
-print(t['march 15'])
-print(t.arr)
-del t['october 2']
+t['march 17'] = 100
+print(t['march 6'])
+print(t['march 17'])
+del t['march 17']
 print(t.arr)
